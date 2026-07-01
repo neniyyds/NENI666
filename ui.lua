@@ -1,40 +1,153 @@
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.Name = "NENIHub"
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NENI_UIHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
+
+-- 主框架
 local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 600, 0, 350)
-Main.Position = UDim2.new(0.5, -300, 0.5, -175)
-Main.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+Main.Size = UDim2.new(0,420,0,260)
+Main.Position = UDim2.new(0.5,-210,0.5,-130)
+Main.BackgroundColor3 = Color3.fromRGB(28,28,35)
+Main.BorderSizePixel = 0
 Main.Parent = ScreenGui
 
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
-MainCorner.Parent = Main
+Instance.new("UICorner",Main).CornerRadius = UDim.new(0,12)
 
--- 左侧菜单
-local Sidebar = Instance.new("Frame")
-Sidebar.Size = UDim2.new(0, 160, 1, 0)
-Sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-Sidebar.Parent = Main
+-- 標題列
+local Top = Instance.new("Frame")
+Top.Size = UDim2.new(1,0,0,40)
+Top.BackgroundColor3 = Color3.fromRGB(35,35,45)
+Top.BorderSizePixel = 0
+Top.Parent = Main
 
-local SideCorner = Instance.new("UICorner")
-SideCorner.CornerRadius = UDim.new(0, 12)
-SideCorner.Parent = Sidebar
+Instance.new("UICorner",Top).CornerRadius = UDim.new(0,12)
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Size = UDim2.new(1,-90,1,0)
+Title.Position = UDim2.new(0,15,0,0)
 Title.BackgroundTransparency = 1
-Title.Text = "NENI HUB"
+Title.Text = "NENI UI HUB"
+Title.TextColor3 = Color3.new(1,1,1)
 Title.Font = Enum.Font.GothamBold
-Title.TextScaled = true
-Title.TextColor3 = Color3.fromRGB(255,255,255)
-Title.Parent = Sidebar
+Title.TextSize = 20
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Top
 
-local function CreateButton(name, y)
+-- 最小化按鈕
+local Min = Instance.new("TextButton")
+Min.Size = UDim2.new(0,35,0,30)
+Min.Position = UDim2.new(1,-45,0,5)
+Min.Text = "-"
+Min.Font = Enum.Font.GothamBold
+Min.TextSize = 22
+Min.TextColor3 = Color3.new(1,1,1)
+Min.BackgroundColor3 = Color3.fromRGB(60,60,80)
+Min.Parent = Top
+Instance.new("UICorner",Min)
+
+-- 內容
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1,-20,1,-55)
+Content.Position = UDim2.new(0,10,0,45)
+Content.BackgroundTransparency = 1
+Content.Parent = Main
+
+local Layout = Instance.new("UIListLayout")
+Layout.Padding = UDim.new(0,8)
+Layout.Parent = Content
+
+local function CreateButton(name)
 	local Btn = Instance.new("TextButton")
-	Btn.Size = UDim2.new(0.9,0,0,40)
-	Btn.Position = UDim2.new(0.05,0,0,y)
+	Btn.Size = UDim2.new(1,0,0,42)
+	Btn.Text = name
+	Btn.Font = Enum.Font.GothamBold
+	Btn.TextSize = 16
+	Btn.TextColor3 = Color3.new(1,1,1)
+	Btn.BackgroundColor3 = Color3.fromRGB(50,50,65)
+	Btn.Parent = Content
+	Instance.new("UICorner",Btn)
+
+	Btn.MouseButton1Click:Connect(function()
+		print(name.." Clicked")
+	end)
+end
+
+CreateButton("功能一")
+CreateButton("功能二")
+CreateButton("功能三")
+CreateButton("設定")
+CreateButton("關於")
+
+-- 懸浮按鈕
+local Float = Instance.new("TextButton")
+Float.Size = UDim2.new(0,55,0,55)
+Float.Position = UDim2.new(0,20,0.5,-25)
+Float.Text = "☰"
+Float.TextSize = 28
+Float.Visible = false
+Float.BackgroundColor3 = Color3.fromRGB(40,40,55)
+Float.TextColor3 = Color3.new(1,1,1)
+Float.Parent = ScreenGui
+Instance.new("UICorner",Float).CornerRadius = UDim.new(1,0)
+
+Min.MouseButton1Click:Connect(function()
+	Main.Visible = false
+	Float.Visible = true
+end)
+
+Float.MouseButton1Click:Connect(function()
+	Main.Visible = true
+	Float.Visible = false
+end)
+
+-- 拖動
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+	local delta = input.Position - dragStart
+	Main.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
+
+Top.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+Top.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and input == dragInput then
+		update(input)
+	end
+end)	Btn.Position = UDim2.new(0.05,0,0,y)
 	Btn.BackgroundColor3 = Color3.fromRGB(45,45,55)
 	Btn.Text = name
 	Btn.Font = Enum.Font.Gotham
