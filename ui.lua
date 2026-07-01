@@ -1,40 +1,94 @@
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "OrionLib"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = playerGui
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "NENIHub"
 
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 300, 0, 350)
-mainFrame.Position = UDim2.new(0.5, -150, 0.5, -175)
-mainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = ScreenGui
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 600, 0, 350)
+Main.Position = UDim2.new(0.5, -300, 0.5, -175)
+Main.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+Main.Parent = ScreenGui
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 12)
-UICorner.Parent = mainFrame
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
 
-local header = Instance.new("Frame")
-header.Name = "Header"
-header.Size = UDim2.new(1, 0, 0, 40)
-header.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-header.BorderSizePixel = 0
-header.Parent = mainFrame
+-- 左侧菜单
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = UDim2.new(0, 160, 1, 0)
+Sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+Sidebar.Parent = Main
 
-local UICorner2 = Instance.new("UICorner")
-UICorner2.CornerRadius = UDim.new(0, 12)
-UICorner2.Parent = header
+local SideCorner = Instance.new("UICorner")
+SideCorner.CornerRadius = UDim.new(0, 12)
+SideCorner.Parent = Sidebar
 
-local title = Instance.new("TextLabel")
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.Text = "NENI HUB"
+Title.Font = Enum.Font.GothamBold
+Title.TextScaled = true
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.Parent = Sidebar
+
+local function CreateButton(name, y)
+	local Btn = Instance.new("TextButton")
+	Btn.Size = UDim2.new(0.9,0,0,40)
+	Btn.Position = UDim2.new(0.05,0,0,y)
+	Btn.BackgroundColor3 = Color3.fromRGB(45,45,55)
+	Btn.Text = name
+	Btn.Font = Enum.Font.Gotham
+	Btn.TextColor3 = Color3.new(1,1,1)
+	Btn.TextSize = 18
+
+	local Corner = Instance.new("UICorner")
+	Corner.CornerRadius = UDim.new(0,8)
+	Corner.Parent = Btn
+
+	Btn.Parent = Sidebar
+	return Btn
+end
+
+local HomeBtn = CreateButton("Home",70)
+local FarmBtn = CreateButton("Auto Farm",120)
+local TpBtn = CreateButton("Teleport",170)
+local SetBtn = CreateButton("Settings",220)
+
+-- 内容区域
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1,-170,1,-20)
+Content.Position = UDim2.new(0,170,0,10)
+Content.BackgroundColor3 = Color3.fromRGB(40,40,45)
+Content.Parent = Main
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0,10)
+ContentCorner.Parent = Content
+
+local Label = Instance.new("TextLabel")
+Label.Size = UDim2.new(1,0,0,40)
+Label.BackgroundTransparency = 1
+Label.Text = "欢迎使用 NENI HUB"
+Label.Font = Enum.Font.GothamBold
+Label.TextSize = 24
+Label.TextColor3 = Color3.new(1,1,1)
+Label.Parent = Content
+
+-- 示例开关
+local Toggle = Instance.new("TextButton")
+Toggle.Size = UDim2.new(0,180,0,45)
+Toggle.Position = UDim2.new(0,20,0,70)
+Toggle.BackgroundColor3 = Color3.fromRGB(0,170,255)
+Toggle.Text = "Auto Farm : OFF"
+Toggle.Font = Enum.Font.GothamBold
+Toggle.TextColor3 = Color3.new(1,1,1)
+Toggle.Parent = Content
+
+local Enabled = false
+Toggle.MouseButton1Click:Connect(function()
+	Enabled = not Enabled
+	Toggle.Text = "Auto Farm : "..(Enabled and "ON" or "OFF")
+end)local title = Instance.new("TextLabel")
 title.Name = "Title"
 title.Size = UDim2.new(1, -80, 1, 0)
 title.Position = UDim2.new(0, 10, 0, 0)
