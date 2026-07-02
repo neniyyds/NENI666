@@ -14945,7 +14945,7 @@ J=true
 aw:Dialog{
 
 Title="關閉hub",
-Content="你真的要關掉它嗎？你得重新啟動才能重新打開它",
+Content="你真的要關掉它嗎 你得重新啟動才能重新打開它",
 Buttons={
 {
 Title="取消",
@@ -15629,21 +15629,6 @@ au.init()
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
-return h
-end
-
-return aa
 
 
 
